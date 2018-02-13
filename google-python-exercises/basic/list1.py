@@ -50,16 +50,21 @@ def front_x(words):
     a_list = sorted(a_list)
     return x_list + a_list
 
+
 # C. sort_last
 # Given a list of non-empty tuples, return a list sorted in increasing
 # order by the last element in each tuple.
 # e.g. [(1, 7), (1, 3), (3, 4, 5), (2, 2)] yields
 # [(2, 2), (1, 3), (3, 4, 5), (1, 7)]
 # Hint: use a custom key= function to extract the last element form each tuple.
-# START HERE #####################################
+
+def mySortFn(t):
+    return t[1]
+
+
 def sort_last(tuples):
-  # +++your code here+++
-  return
+    # +++your code here+++
+    return sorted(tuples, key=mySortFn)
 
 
 # Simple provided test() function used in main() to print
