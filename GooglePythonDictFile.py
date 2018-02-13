@@ -74,12 +74,4 @@ tmp = f.read()  # as char string
 f.close()
 print(tmp[0]) 
 
-
-## Bug here?
-f = open('tmpFile.txt', 'w')
-print('a string to write', file=f)
-f.close
-f = open('tmpFile.txt', 'r')
-for line in f: print(line,)
-f.close()
-
+# next: wordcount.py
