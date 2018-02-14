@@ -38,6 +38,8 @@ print_words() and print_top().
 """
 
 import sys
+import string
+import operator
 
 # +++your code here+++
 # Define print_words(filename) and print_top(filename) functions.
@@ -45,24 +47,101 @@ import sys
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
 
+
+def getTop20Keys(dict):
+
+    valList = dict.values()
+    valList = sorted(valList, reverse=True)
+    valList = valList[0:20]
+
+    keyList = valList[:]  # makes a copy instead of assigning ptrs
+
+    for key, value in dict.items():
+        if value in valList:
+            indices = [i for i, x in enumerate(valList) if x == value]
+            # idx = valList.index(value)
+            for idx in indices:
+                if keyList[idx] == value:
+                    keyList[idx] = key
+                    break
+
+    newList = []
+    for idx in range(20):
+        # print(idx, valList[idx], keyList[idx])
+        # newdict[keyList[idx]] = valList[idx]
+        newList.append((keyList[idx], valList[idx]))
+
+    return(newList)
+
+
+def removePunct(stringToProcess):
+    cleanString = ""
+    for c in stringToProcess:
+        if c not in string.punctuation:
+            cleanString = cleanString + c
+    return(cleanString)
+
+
+def helperUtil(filename):
+    # print("helper")
+    dict = {}
+    f = open(filename, 'r')  # read
+    for line in f:
+        # remove linefeed
+        line = line.rstrip('\n')
+        # remove punct
+        line = removePunct(line)
+        # to lower
+        line = line.lower()
+        # split into words
+        lineWords = line.split(' ')
+        for word in lineWords:
+            word.strip()
+            if len(word) > 0 and word.isalpha():
+                if word in dict:
+                    count = dict[word]
+                    dict[word] = count + 1
+                else:
+                    dict[word] = 1
+        # print(line,)  # suppresses print's \n
+    f.close()
+    return(dict)
+
+
+def print_words(filename):
+    # print("print_words")
+    dict = helperUtil("alice.txt")
+    for key in sorted(dict.keys()):
+        print(key, dict[key])
+    return
+
+
+def print_top(filename):
+    # print("print_top")
+    dict = helperUtil("alice.txt")
+    newList = getTop20Keys(dict)
+    for tpl in newList:
+        print(tpl[0], tpl[1])
+    return
 ###
+
 
 # This basic command line argument parsing code is provided and
 # calls the print_words() and print_top() functions which you must define.
 def main():
-  if len(sys.argv) != 3:
-    print('usage: ./wordcount.py {--count | --topcount} file')
-    sys.exit(1)
+    if len(sys.argv) != 3:
+        print('usage: ./wordcount.py {--count | --topcount} file')
+        sys.exit(1)
 
-  option = sys.argv[1]
-  filename = sys.argv[2]
-  if option == '--count':
-    print_words(filename)
-  elif option == '--topcount':
-    print_top(filename)
-  else:
-    print('unknown option: ' + option)
-    sys.exit(1)
+    option = sys.argv[1]
+    filename = sys.argv[2]
+    if option == '--count':
+        print_words(filename)
+    elif option == '--topcount':
+        print_top(filename)
+    else:
+        print('unknown option: ' + option)
+        sys.exit(1)
 
 if __name__ == '__main__':
-  main()
+    main()
